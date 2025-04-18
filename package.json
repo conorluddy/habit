@@ -1,0 +1,21 @@
+{
+  "name": "habit",
+  "version": "1.0.0",
+  "description": "Ultra-minimal, techy, single-page web app for generating and printing customizable A4 habit tracking templates inspired by Atomic Habits.",
+  "main": "main.js",
+  "scripts": {
+    "build": "tsc src/main.ts --outDir . --lib es2017,dom --skipLibCheck",
+    "start": "python3 -m http.server 8111",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conorluddy/habit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/conorluddy/habit/issues"
+  },
+  "homepage": "https://github.com/conorluddy/habit#readme",
+  "author": "",
+  "license": "ISC"
+}
