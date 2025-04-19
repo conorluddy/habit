@@ -123,189 +123,208 @@ function gatherConfigFromForm() {
   return { habitCount, habits, months, monthStartCurrent, hideMonthLabels };
 }
 
-// src/tracker-render.ts
-function renderTrackerTemplate(trackerConfig) {
-  appRoot.innerHTML = "";
-  const titleElement = document.createElement("h1");
-  titleElement.textContent = uiConfig.appTitle;
-  titleElement.style.fontSize = uiConfig.titleFontSize;
-  titleElement.style.fontWeight = uiConfig.titleFontWeight;
-  titleElement.style.letterSpacing = uiConfig.titleLetterSpacing;
-  titleElement.style.marginBottom = uiConfig.titleMarginBottom;
-  appRoot.appendChild(titleElement);
-  const subtitleElement = document.createElement("div");
-  subtitleElement.textContent = `Tracking for ${trackerConfig.months} month${trackerConfig.months > 1 ? "s" : ""}`;
-  subtitleElement.style.fontSize = uiConfig.subtitleFontSize;
-  subtitleElement.style.color = uiConfig.subtitleColor;
-  subtitleElement.style.marginBottom = uiConfig.subtitleMarginBottom;
-  appRoot.appendChild(subtitleElement);
-  for (let habitIndex = 0; habitIndex < trackerConfig.habitCount; habitIndex++) {
-    const habit = trackerConfig.habits[habitIndex];
+// src/utils/months.ts
+function getMonthLabel(m, config2) {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  const start = config2.monthStartCurrent ? (/* @__PURE__ */ new Date()).getMonth() : 0;
+  return months[(start + m) % 12];
+}
+
+// src/utils/render.ts
+function renderMonthBlock(label, grid, labelClass = "tracker-week-month-label") {
+  const row = document.createElement("div");
+  row.className = "month-flex-row";
+  if (label) {
+    const labelElem = document.createElement("div");
+    labelElem.className = labelClass;
+    labelElem.textContent = label;
+    row.appendChild(labelElem);
+  }
+  row.appendChild(grid);
+  return row;
+}
+
+// src/HabitSection.ts
+var HabitSection = class {
+  constructor(habit, trackerConfig) {
+    this.habit = habit;
+    this.trackerConfig = trackerConfig;
+  }
+  render() {
     const sectionElem = document.createElement("section");
     sectionElem.className = uiConfig.sectionClass;
     const habitTitleElem = document.createElement("div");
     habitTitleElem.className = uiConfig.titleClass;
-    habitTitleElem.textContent = habit.name || `Habit ${habitIndex + 1}`;
+    habitTitleElem.textContent = this.habit.name || "Habit";
     sectionElem.appendChild(habitTitleElem);
-    if (habit.stacking) {
+    if (this.habit.stacking) {
       const stackingElem = document.createElement("div");
       stackingElem.className = uiConfig.stackingClass;
-      stackingElem.textContent = habit.stacking;
+      stackingElem.textContent = this.habit.stacking;
       sectionElem.appendChild(stackingElem);
     }
     const freqLabelElem = document.createElement("div");
     freqLabelElem.className = uiConfig.labelClass;
-    if (habit.frequency === "daily") {
+    if (this.habit.frequency === "daily") {
       freqLabelElem.textContent = uiConfig.labelDaily;
-    } else if (habit.frequency === "weekly") {
+    } else if (this.habit.frequency === "weekly") {
       freqLabelElem.textContent = uiConfig.labelWeekly;
     } else {
-      freqLabelElem.textContent = `${uiConfig.labelCustom}: ${habit.customDays.map((d) => DAYS_OF_WEEK[d]).join(", ")}`;
+      freqLabelElem.textContent = `${uiConfig.labelCustom}: ${this.habit.customDays.map((d) => DAYS_OF_WEEK[d]).join(", ")}`;
     }
     sectionElem.appendChild(freqLabelElem);
+    sectionElem.appendChild(this.renderGrid());
+    return sectionElem;
+  }
+  renderGrid() {
     const gridElem = document.createElement("div");
     gridElem.className = uiConfig.gridClass;
-    if (habit.frequency === "daily") {
-      for (let m = 0; m < trackerConfig.months; m++) {
-        const monthFlexRow = document.createElement("div");
-        monthFlexRow.className = "month-flex-row";
-        if (!trackerConfig.hideMonthLabels) {
-          const monthLabelElem = document.createElement("div");
-          monthLabelElem.className = uiConfig.weekLabelClass;
-          const monthsList = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-          ];
-          let startMonth = 0;
-          if (trackerConfig.monthStartCurrent) {
-            startMonth = (/* @__PURE__ */ new Date()).getMonth();
-          }
-          const monthIdx = (startMonth + m) % 12;
-          monthLabelElem.textContent = monthsList[monthIdx];
-          monthFlexRow.appendChild(monthLabelElem);
-        }
-        const daysInMonth = uiConfig.defaultDaysInMonth;
-        gridElem.style.gridTemplateColumns = `repeat(${daysInMonth}, ${uiConfig.cellSize})`;
-        for (let d = 0; d < daysInMonth; d++) {
+    if (this.habit.frequency === "daily") {
+      return this.renderDaily(gridElem);
+    } else if (this.habit.frequency === "weekly") {
+      return this.renderWeekly();
+    } else {
+      return this.renderCustom(gridElem);
+    }
+  }
+  renderDaily(gridElem) {
+    const container = document.createElement("div");
+    for (let m = 0; m < this.trackerConfig.months; m++) {
+      const label = this.trackerConfig.hideMonthLabels ? null : getMonthLabel(m, this.trackerConfig);
+      gridElem.innerHTML = "";
+      const daysInMonth = uiConfig.defaultDaysInMonth;
+      gridElem.style.gridTemplateColumns = `repeat(${daysInMonth}, ${uiConfig.cellSize})`;
+      for (let d = 0; d < daysInMonth; d++) {
+        const cellElem = document.createElement("span");
+        cellElem.className = uiConfig.cellClass;
+        cellElem.title = `Day ${d + 1}`;
+        const dayIdx = d % 7;
+        cellElem.textContent = DAYS_OF_WEEK[dayIdx][0];
+        gridElem.appendChild(cellElem);
+      }
+      container.appendChild(renderMonthBlock(label, gridElem.cloneNode(true)));
+    }
+    return container;
+  }
+  renderWeekly() {
+    const monthsRow = document.createElement("div");
+    monthsRow.className = "weekly-months-row";
+    for (let m = 0; m < this.trackerConfig.months; m++) {
+      const monthCol = document.createElement("div");
+      monthCol.className = "weekly-month-col";
+      monthCol.style.display = "flex";
+      monthCol.style.flexDirection = "column";
+      monthCol.style.alignItems = "center";
+      monthCol.style.marginRight = "0.8em";
+      if (!this.trackerConfig.hideMonthLabels) {
+        const monthLabelElem = document.createElement("div");
+        monthLabelElem.className = uiConfig.weekLabelClass;
+        monthLabelElem.textContent = getMonthLabel(m, this.trackerConfig);
+        monthCol.appendChild(monthLabelElem);
+      }
+      const weeksRow = document.createElement("div");
+      weeksRow.className = "weekly-month-weeks-row";
+      weeksRow.style.display = "flex";
+      weeksRow.style.flexDirection = "row";
+      weeksRow.style.gap = "0.2em";
+      for (let w = 0; w < uiConfig.weeksInMonth; w++) {
+        const cellElem = document.createElement("span");
+        cellElem.className = uiConfig.cellClass;
+        cellElem.title = `Week ${w + 1}`;
+        weeksRow.appendChild(cellElem);
+      }
+      monthCol.appendChild(weeksRow);
+      monthsRow.appendChild(monthCol);
+    }
+    return monthsRow;
+  }
+  renderCustom(gridElem) {
+    const container = document.createElement("div");
+    for (let m = 0; m < this.trackerConfig.months; m++) {
+      const label = this.trackerConfig.hideMonthLabels ? null : getMonthLabel(m, this.trackerConfig);
+      gridElem.innerHTML = "";
+      const weeks = uiConfig.weeksInMonth;
+      const days = this.habit.customDays.length || 1;
+      gridElem.style.gridTemplateColumns = `repeat(${weeks * days}, ${uiConfig.cellSize})`;
+      for (let w = 0; w < weeks; w++) {
+        for (const d of this.habit.customDays) {
           const cellElem = document.createElement("span");
           cellElem.className = uiConfig.cellClass;
-          cellElem.title = `Day ${d + 1}`;
-          const dayIdx = d % 7;
-          cellElem.textContent = DAYS_OF_WEEK[dayIdx][0];
+          cellElem.title = `Week ${w + 1} - ${DAYS_OF_WEEK[d]}`;
+          cellElem.textContent = DAYS_OF_WEEK[d][0];
           gridElem.appendChild(cellElem);
         }
-        monthFlexRow.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = "";
-        sectionElem.appendChild(monthFlexRow);
       }
-    } else if (habit.frequency === "weekly") {
-      const monthsRow = document.createElement("div");
-      monthsRow.className = "weekly-months-row";
-      for (let m = 0; m < trackerConfig.months; m++) {
-        const monthCol = document.createElement("div");
-        monthCol.className = "weekly-month-col";
-        monthCol.style.display = "flex";
-        monthCol.style.flexDirection = "column";
-        monthCol.style.alignItems = "center";
-        monthCol.style.marginRight = "0.8em";
-        if (!trackerConfig.hideMonthLabels) {
-          const monthLabelElem = document.createElement("div");
-          monthLabelElem.className = uiConfig.weekLabelClass;
-          const monthsList = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-          ];
-          let startMonth = 0;
-          if (trackerConfig.monthStartCurrent) {
-            startMonth = (/* @__PURE__ */ new Date()).getMonth();
-          }
-          const monthIdx = (startMonth + m) % 12;
-          monthLabelElem.textContent = monthsList[monthIdx];
-          monthCol.appendChild(monthLabelElem);
-        }
-        const weeksRow = document.createElement("div");
-        weeksRow.className = "weekly-month-weeks-row";
-        weeksRow.style.display = "flex";
-        weeksRow.style.flexDirection = "row";
-        weeksRow.style.gap = "0.2em";
-        for (let w = 0; w < uiConfig.weeksInMonth; w++) {
-          const cellElem = document.createElement("span");
-          cellElem.className = uiConfig.cellClass;
-          cellElem.title = `Week ${w + 1}`;
-          weeksRow.appendChild(cellElem);
-        }
-        monthCol.appendChild(weeksRow);
-        monthsRow.appendChild(monthCol);
-      }
-      sectionElem.appendChild(monthsRow);
-    } else if (habit.frequency === "custom") {
-      for (let m = 0; m < trackerConfig.months; m++) {
-        const monthFlexRow = document.createElement("div");
-        monthFlexRow.className = "month-flex-row";
-        if (!trackerConfig.hideMonthLabels) {
-          const monthLabelElem = document.createElement("div");
-          monthLabelElem.className = uiConfig.weekLabelClass;
-          const monthsList = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-          ];
-          let startMonth = 0;
-          if (trackerConfig.monthStartCurrent) {
-            startMonth = (/* @__PURE__ */ new Date()).getMonth();
-          }
-          const monthIdx = (startMonth + m) % 12;
-          monthLabelElem.textContent = monthsList[monthIdx];
-          monthFlexRow.appendChild(monthLabelElem);
-        }
-        const weeks = uiConfig.weeksInMonth;
-        const days = habit.customDays.length || 1;
-        gridElem.style.gridTemplateColumns = `repeat(${weeks * days}, ${uiConfig.cellSize})`;
-        for (let w = 0; w < weeks; w++) {
-          for (const d of habit.customDays) {
-            const cellElem = document.createElement("span");
-            cellElem.className = uiConfig.cellClass;
-            cellElem.title = `Week ${w + 1} - ${DAYS_OF_WEEK[d]}`;
-            cellElem.textContent = DAYS_OF_WEEK[d][0];
-            gridElem.appendChild(cellElem);
-          }
-        }
-        monthFlexRow.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = "";
-        sectionElem.appendChild(monthFlexRow);
-      }
+      container.appendChild(renderMonthBlock(label, gridElem.cloneNode(true)));
     }
-    appRoot.appendChild(sectionElem);
+    return container;
   }
+};
+
+// src/HabitTrackerRenderer.ts
+var HabitTrackerRenderer = class {
+  constructor(trackerConfig) {
+    this.trackerConfig = trackerConfig;
+  }
+  render() {
+    appRoot.innerHTML = "";
+    const titleElement = document.createElement("h1");
+    titleElement.textContent = uiConfig.appTitle;
+    titleElement.style.fontSize = uiConfig.titleFontSize;
+    titleElement.style.fontWeight = uiConfig.titleFontWeight;
+    titleElement.style.letterSpacing = uiConfig.titleLetterSpacing;
+    titleElement.style.marginBottom = uiConfig.titleMarginBottom;
+    appRoot.appendChild(titleElement);
+    const subtitleElement = document.createElement("div");
+    subtitleElement.textContent = `Tracking for ${this.trackerConfig.months} month${this.trackerConfig.months > 1 ? "s" : ""}`;
+    subtitleElement.style.fontSize = uiConfig.subtitleFontSize;
+    subtitleElement.style.color = uiConfig.subtitleColor;
+    subtitleElement.style.marginBottom = uiConfig.subtitleMarginBottom;
+    appRoot.appendChild(subtitleElement);
+    for (let i = 0; i < this.trackerConfig.habitCount; i++) {
+      const habit = this.trackerConfig.habits[i];
+      const section = new HabitSection(habit, this.trackerConfig);
+      appRoot.appendChild(section.render());
+    }
+  }
+  updateConfig(config2) {
+    this.trackerConfig = config2;
+    this.render();
+  }
+};
+
+// src/events.ts
+function attachConfigDialogEvents(renderer) {
+  openDialogBtn.addEventListener("click", () => {
+    updateHabitsConfigUI(renderer["trackerConfig"]);
+    configDialog.showModal();
+  });
+  closeDialogBtn.addEventListener("click", () => {
+    configDialog.close();
+  });
+  habitCountInput.addEventListener("input", () => {
+    updateHabitsConfigUI(renderer["trackerConfig"]);
+  });
+  configForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const config2 = gatherConfigFromForm();
+    saveConfig(config2);
+    renderer.updateConfig(config2);
+    configDialog.close();
+  });
 }
 
 // src/main.ts
@@ -315,26 +334,11 @@ var DEFAULT_CONFIG = {
   months: 1
 };
 var config = loadConfig() || DEFAULT_CONFIG;
-openDialogBtn.addEventListener("click", () => {
-  updateHabitsConfigUI(config);
-  configDialog.showModal();
-});
-closeDialogBtn.addEventListener("click", () => {
-  configDialog.close();
-});
-habitCountInput.addEventListener("input", () => {
-  updateHabitsConfigUI(config);
-});
-configForm.addEventListener("submit", (e) => {
-  e.preventDefault();
-  config = gatherConfigFromForm();
-  saveConfig(config);
-  renderTrackerTemplate(config);
-  configDialog.close();
-});
 (function init() {
   habitCountInput.value = String(config.habitCount);
   monthsInput.value = String(config.months);
   updateHabitsConfigUI(config);
-  renderTrackerTemplate(config);
+  const renderer = new HabitTrackerRenderer(config);
+  renderer.render();
+  attachConfigDialogEvents(renderer);
 })();

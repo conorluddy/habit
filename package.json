@@ -20,7 +20,12 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/css": "^0.7.0",
+    "@eslint/js": "^9.25.0",
     "esbuild": "^0.25.2",
-    "prettier": "^3.5.3"
+    "eslint": "^9.25.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript-eslint": "^8.30.1"
   }
 }

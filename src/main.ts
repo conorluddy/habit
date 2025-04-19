@@ -1,16 +1,10 @@
 // main.ts (modularized)
 import { TrackerConfig } from './types.js';
-import { loadConfig, saveConfig } from './config.js';
-import {
-  openDialogBtn,
-  configDialog,
-  configForm,
-  closeDialogBtn,
-  habitCountInput,
-  monthsInput,
-} from './dom.js';
-import { updateHabitsConfigUI, gatherConfigFromForm } from './habits-ui.js';
-import { renderTrackerTemplate } from './tracker-render.js';
+import { loadConfig } from './config.js';
+import { HabitTrackerRenderer } from './HabitTrackerRenderer.js';
+import { attachConfigDialogEvents } from './events.js';
+import { updateHabitsConfigUI } from './habits-ui.js';
+import { habitCountInput, monthsInput } from './dom.js';
 
 const DEFAULT_CONFIG: TrackerConfig = {
   habitCount: 1,
@@ -18,29 +12,13 @@ const DEFAULT_CONFIG: TrackerConfig = {
   months: 1,
 };
 
-let config: TrackerConfig = loadConfig() || DEFAULT_CONFIG;
-
-openDialogBtn.addEventListener('click', () => {
-  updateHabitsConfigUI(config);
-  configDialog.showModal();
-});
-closeDialogBtn.addEventListener('click', () => {
-  configDialog.close();
-});
-habitCountInput.addEventListener('input', () => {
-  updateHabitsConfigUI(config);
-});
-configForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  config = gatherConfigFromForm();
-  saveConfig(config);
-  renderTrackerTemplate(config);
-  configDialog.close();
-});
+const config: TrackerConfig = loadConfig() || DEFAULT_CONFIG;
 
 (function init() {
   habitCountInput.value = String(config.habitCount);
   monthsInput.value = String(config.months);
   updateHabitsConfigUI(config);
-  renderTrackerTemplate(config);
+  const renderer = new HabitTrackerRenderer(config);
+  renderer.render();
+  attachConfigDialogEvents(renderer);
 })();

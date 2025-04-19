@@ -17,7 +17,6 @@
     "src/dom.ts",
     "src/habits-ui.ts",
     "src/main.ts",
-    "src/tracker-render.ts",
     "src/types.ts"
   ]
 }

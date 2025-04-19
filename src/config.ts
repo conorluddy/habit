@@ -49,6 +49,8 @@ export function loadConfig(): TrackerConfig | null {
     ) {
       return parsed;
     }
-  } catch {}
+  } catch {
+    // Intentionally ignore JSON parse errors
+  }
   return null;
 }
