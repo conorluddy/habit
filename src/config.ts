@@ -6,31 +6,31 @@ const STORAGE_KEY = 'trackerConfig';
 export const trackerConfig: TrackerConfig = {
   habitCount: 0,
   habits: [],
-  months: 0
+  months: 0,
 };
 
 export const uiConfig = {
-  appTitle: "Habit Tracker",
-  titleFontSize: "1.6em",
-  titleFontWeight: "bold",
-  titleLetterSpacing: "0.04em",
-  titleMarginBottom: "0.3em",
-  subtitleFontSize: "1em",
-  subtitleColor: "#555",
-  subtitleMarginBottom: "1.5em",
+  appTitle: 'Habit Tracker',
+  titleFontSize: '1.6em',
+  titleFontWeight: 'bold',
+  titleLetterSpacing: '0.04em',
+  titleMarginBottom: '0.3em',
+  subtitleFontSize: '1em',
+  subtitleColor: '#555',
+  subtitleMarginBottom: '1.5em',
   defaultDaysInMonth: 31,
-  cellSize: "18px",
+  cellSize: '18px',
   weeksInMonth: 5,
-  labelDaily: "Daily",
-  labelWeekly: "Weekly",
-  labelCustom: "Custom",
-  sectionClass: "tracker-section",
-  titleClass: "tracker-title",
-  stackingClass: "tracker-stacking",
-  labelClass: "tracker-label",
-  gridClass: "tracker-grid",
-  weekLabelClass: "tracker-week-label",
-  cellClass: "tracker-cell"
+  labelDaily: 'Daily',
+  labelWeekly: 'Weekly',
+  labelCustom: '',
+  sectionClass: 'tracker-section',
+  titleClass: 'tracker-title',
+  stackingClass: 'tracker-stacking',
+  labelClass: 'tracker-label',
+  gridClass: 'tracker-grid',
+  weekLabelClass: 'tracker-week-label',
+  cellClass: 'tracker-cell',
 };
 
 export function saveConfig(config: TrackerConfig) {
