@@ -2,7 +2,15 @@
 import { TrackerConfig, HabitConfig, FrequencyType } from './types.js';
 import { habitCountInput, habitsConfigDiv } from './dom.js';
 
-export const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+export const DAYS_OF_WEEK = [
+  'Sunday',
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+];
 
 export function updateHabitsConfigUI(config: TrackerConfig) {
   const count = Number(habitCountInput.value);
@@ -52,6 +60,10 @@ export function updateHabitsConfigUI(config: TrackerConfig) {
 export function gatherConfigFromForm(): TrackerConfig {
   const habitCount = Number(habitCountInput.value);
   const months = Number((document.getElementById('months') as HTMLInputElement).value);
+  const monthStartCurrent = (document.getElementById('month-start-current') as HTMLInputElement)
+    .checked;
+  const hideMonthLabels = (document.getElementById('hide-month-labels') as HTMLInputElement)
+    .checked;
   const habits: HabitConfig[] = [];
   for (let i = 0; i < habitCount; i++) {
     const name = (document.getElementById(`habit-name-${i}`) as HTMLInputElement).value.trim();
@@ -68,5 +80,5 @@ export function gatherConfigFromForm(): TrackerConfig {
     ).value.trim();
     habits.push({ name, frequency, customDays, stacking });
   }
-  return { habitCount, habits, months };
+  return { habitCount, habits, months, monthStartCurrent, hideMonthLabels };
 }

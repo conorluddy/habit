@@ -11,7 +11,7 @@
       <!-- Main A4 printable content will be rendered here -->
     </div>
     <dialog id="config-dialog">
-      <form method="dialog" id="config-form">
+      <form method="dialog" id="config-form" style="min-width:510px;">
         <header>
           <h2>Configure Your Tracker</h2>
           <button id="close-dialog" type="button" aria-label="Close">✕</button>
@@ -26,6 +26,13 @@
         <fieldset>
           <label for="months">Months to Display:</label>
           <input type="number" id="months" name="months" min="1" max="12" value="1" />
+        </fieldset>
+        <fieldset>
+          <input type="checkbox" id="month-start-current" name="month-start-current" />
+          <label for="month-start-current">Start months from current month</label>
+          <br />
+          <input type="checkbox" id="hide-month-labels" name="hide-month-labels" />
+          <label for="hide-month-labels">Hide month labels</label>
         </fieldset>
         <footer>
           <button type="submit">Apply</button>

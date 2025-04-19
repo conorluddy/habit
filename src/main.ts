@@ -2,7 +2,6 @@
 import { TrackerConfig } from './types.js';
 import { loadConfig, saveConfig } from './config.js';
 import {
-  appRoot,
   openDialogBtn,
   configDialog,
   configForm,

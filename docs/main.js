@@ -14,13 +14,13 @@ var uiConfig = {
   weeksInMonth: 5,
   labelDaily: "Daily",
   labelWeekly: "Weekly",
-  labelCustom: "",
+  labelCustom: "Days",
   sectionClass: "tracker-section",
   titleClass: "tracker-title",
   stackingClass: "tracker-stacking",
   labelClass: "tracker-label",
   gridClass: "tracker-grid",
-  weekLabelClass: "tracker-week-label",
+  weekLabelClass: "tracker-week-month-label",
   cellClass: "tracker-cell"
 };
 function saveConfig(config2) {
@@ -50,7 +50,15 @@ var monthsInput = document.getElementById("months");
 var habitsConfigDiv = document.getElementById("habits-config");
 
 // src/habits-ui.ts
-var DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+var DAYS_OF_WEEK = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
 function updateHabitsConfigUI(config2) {
   const count = Number(habitCountInput.value);
   habitsConfigDiv.innerHTML = "";
@@ -97,6 +105,8 @@ function updateHabitsConfigUI(config2) {
 function gatherConfigFromForm() {
   const habitCount = Number(habitCountInput.value);
   const months = Number(document.getElementById("months").value);
+  const monthStartCurrent = document.getElementById("month-start-current").checked;
+  const hideMonthLabels = document.getElementById("hide-month-labels").checked;
   const habits = [];
   for (let i = 0; i < habitCount; i++) {
     const name = document.getElementById(`habit-name-${i}`).value.trim();
@@ -110,7 +120,7 @@ function gatherConfigFromForm() {
     const stacking = document.getElementById(`habit-stacking-${i}`).value.trim();
     habits.push({ name, frequency, customDays, stacking });
   }
-  return { habitCount, habits, months };
+  return { habitCount, habits, months, monthStartCurrent, hideMonthLabels };
 }
 
 // src/tracker-render.ts
@@ -175,27 +185,84 @@ function renderTrackerTemplate(trackerConfig) {
         gridElem.innerHTML = "";
       }
     } else if (habit.frequency === "weekly") {
+      const monthsRow = document.createElement("div");
+      monthsRow.className = "weekly-months-row";
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement("div");
-        monthLabelElem.className = uiConfig.weekLabelClass;
-        monthLabelElem.textContent = `Month ${m + 1}`;
-        sectionElem.appendChild(monthLabelElem);
-        gridElem.style.gridTemplateColumns = `repeat(${uiConfig.weeksInMonth}, ${uiConfig.cellSize})`;
+        const monthCol = document.createElement("div");
+        monthCol.className = "weekly-month-col";
+        monthCol.style.display = "flex";
+        monthCol.style.flexDirection = "column";
+        monthCol.style.alignItems = "center";
+        monthCol.style.marginRight = "0.8em";
+        if (!trackerConfig.hideMonthLabels) {
+          const monthLabelElem = document.createElement("div");
+          monthLabelElem.className = uiConfig.weekLabelClass;
+          const monthsList = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+          ];
+          let startMonth = 0;
+          if (trackerConfig.monthStartCurrent) {
+            startMonth = (/* @__PURE__ */ new Date()).getMonth();
+          }
+          const monthIdx = (startMonth + m) % 12;
+          monthLabelElem.textContent = monthsList[monthIdx];
+          monthCol.appendChild(monthLabelElem);
+        }
+        const weeksRow = document.createElement("div");
+        weeksRow.className = "weekly-month-weeks-row";
+        weeksRow.style.display = "flex";
+        weeksRow.style.flexDirection = "row";
+        weeksRow.style.gap = "0.2em";
         for (let w = 0; w < uiConfig.weeksInMonth; w++) {
           const cellElem = document.createElement("span");
           cellElem.className = uiConfig.cellClass;
           cellElem.title = `Week ${w + 1}`;
-          gridElem.appendChild(cellElem);
+          weeksRow.appendChild(cellElem);
         }
-        sectionElem.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = "";
+        monthCol.appendChild(weeksRow);
+        monthsRow.appendChild(monthCol);
       }
+      sectionElem.appendChild(monthsRow);
     } else if (habit.frequency === "custom") {
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement("div");
-        monthLabelElem.className = uiConfig.weekLabelClass;
-        monthLabelElem.textContent = `Month ${m + 1}`;
-        sectionElem.appendChild(monthLabelElem);
+        const monthFlexRow = document.createElement("div");
+        monthFlexRow.className = "month-flex-row";
+        if (!trackerConfig.hideMonthLabels) {
+          const monthLabelElem = document.createElement("div");
+          monthLabelElem.className = uiConfig.weekLabelClass;
+          const monthsList = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+          ];
+          let startMonth = 0;
+          if (trackerConfig.monthStartCurrent) {
+            startMonth = (/* @__PURE__ */ new Date()).getMonth();
+          }
+          const monthIdx = (startMonth + m) % 12;
+          monthLabelElem.textContent = monthsList[monthIdx];
+          monthFlexRow.appendChild(monthLabelElem);
+        }
         const weeks = uiConfig.weeksInMonth;
         const days = habit.customDays.length || 1;
         gridElem.style.gridTemplateColumns = `repeat(${weeks * days}, ${uiConfig.cellSize})`;
@@ -208,8 +275,9 @@ function renderTrackerTemplate(trackerConfig) {
             gridElem.appendChild(cellElem);
           }
         }
-        sectionElem.appendChild(gridElem.cloneNode(true));
+        monthFlexRow.appendChild(gridElem.cloneNode(true));
         gridElem.innerHTML = "";
+        sectionElem.appendChild(monthFlexRow);
       }
     }
     appRoot.appendChild(sectionElem);

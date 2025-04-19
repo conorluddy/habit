@@ -23,13 +23,13 @@ export const uiConfig = {
   weeksInMonth: 5,
   labelDaily: 'Daily',
   labelWeekly: 'Weekly',
-  labelCustom: '',
+  labelCustom: 'Days',
   sectionClass: 'tracker-section',
   titleClass: 'tracker-title',
   stackingClass: 'tracker-stacking',
   labelClass: 'tracker-label',
   gridClass: 'tracker-grid',
-  weekLabelClass: 'tracker-week-label',
+  weekLabelClass: 'tracker-week-month-label',
   cellClass: 'tracker-cell',
 };
 

@@ -13,4 +13,6 @@ export type TrackerConfig = {
   habitCount: number;
   habits: HabitConfig[];
   months: number;
+  monthStartCurrent?: boolean;
+  hideMonthLabels?: boolean;
 };

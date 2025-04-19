@@ -156,7 +156,7 @@ button:focus {
   justify-content: center;
 }
 dialog#config-dialog {
-  min-width: 340px;
+  min-width: 510px;
   background: #181818;
   color: #eee;
   border-radius: 8px;
@@ -209,6 +209,32 @@ dialog[open] {
   margin-top: 1em;
 }
 /* Main tracker styles */
+.month-flex-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  flex-direction: row-reverse;
+  justify-content: flex-end;
+}
+.weekly-months-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1.2em;
+  align-items: flex-start;
+}
+.weekly-month-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+.weekly-month-weeks-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2em;
+  margin-top: 0.2em;
+}
 .tracker-section {
   margin-bottom: 2.5rem;
 }
@@ -227,7 +253,6 @@ dialog[open] {
 .tracker-grid {
   display: grid;
   gap: 2px;
-  margin-bottom: 0.5em;
 }
 .tracker-label {
   font-size: 0.9em;
@@ -249,12 +274,12 @@ dialog[open] {
   font-size: 0.7em;
   line-height: 17px;
 }
-.tracker-week-label {
+.tracker-week-month-label {
   font-size: 0.8em;
   color: #888;
   text-align: center;
-  margin-bottom: 0.2em;
   text-align: left;
+  text-transform: uppercase;
 }
 /* Print Styles */
 @media print {
