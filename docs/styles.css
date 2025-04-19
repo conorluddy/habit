@@ -215,6 +215,7 @@ dialog[open] {
   gap: 0.8em;
   flex-direction: row-reverse;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 .weekly-months-row {
   display: flex;
@@ -258,6 +259,7 @@ dialog[open] {
   font-size: 0.9em;
   color: #444;
   margin-bottom: 0.4em;
+  display: none;
 }
 .tracker-cell {
   border: 1px solid #bbb;

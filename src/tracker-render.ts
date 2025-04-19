@@ -49,10 +49,34 @@ export function renderTrackerTemplate(trackerConfig: TrackerConfig) {
     gridElem.className = uiConfig.gridClass;
     if (habit.frequency === 'daily') {
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement('div');
-        monthLabelElem.className = uiConfig.weekLabelClass;
-        monthLabelElem.textContent = `Month ${m + 1}`;
-        sectionElem.appendChild(monthLabelElem);
+        const monthFlexRow = document.createElement('div');
+        monthFlexRow.className = 'month-flex-row';
+        // Month label logic
+        if (!trackerConfig.hideMonthLabels) {
+          const monthLabelElem = document.createElement('div');
+          monthLabelElem.className = uiConfig.weekLabelClass;
+          const monthsList = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+          ];
+          let startMonth = 0;
+          if (trackerConfig.monthStartCurrent) {
+            startMonth = new Date().getMonth();
+          }
+          const monthIdx = (startMonth + m) % 12;
+          monthLabelElem.textContent = monthsList[monthIdx];
+          monthFlexRow.appendChild(monthLabelElem);
+        }
         const daysInMonth = uiConfig.defaultDaysInMonth;
         gridElem.style.gridTemplateColumns = `repeat(${daysInMonth}, ${uiConfig.cellSize})`;
         for (let d = 0; d < daysInMonth; d++) {
@@ -63,8 +87,9 @@ export function renderTrackerTemplate(trackerConfig: TrackerConfig) {
           cellElem.textContent = DAYS_OF_WEEK[dayIdx][0];
           gridElem.appendChild(cellElem);
         }
-        sectionElem.appendChild(gridElem.cloneNode(true));
+        monthFlexRow.appendChild(gridElem.cloneNode(true));
         gridElem.innerHTML = '';
+        sectionElem.appendChild(monthFlexRow);
       }
     } else if (habit.frequency === 'weekly') {
       // Render weekly mode as a grid: each month is a column, label above, 5 week cells below
