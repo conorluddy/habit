@@ -4,8 +4,8 @@
   "description": "Ultra-minimal, techy, single-page web app for generating and printing customizable A4 habit tracking templates inspired by Atomic Habits.",
   "main": "main.js",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --outfile=main.js --platform=browser --format=esm",
-    "start": "python3 -m http.server 8111",
+    "build": "esbuild src/main.ts --bundle --outfile=docs/main.js --platform=browser --format=esm",
+    "start": "python3 -m http.server 8111 --directory docs",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"src/**/*.{ts,js,json}\""
   },

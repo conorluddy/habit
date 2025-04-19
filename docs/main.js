@@ -1,27 +1,27 @@
 // src/config.ts
-var STORAGE_KEY = 'trackerConfig';
+var STORAGE_KEY = "trackerConfig";
 var uiConfig = {
-  appTitle: 'Habit Tracker',
-  titleFontSize: '1.6em',
-  titleFontWeight: 'bold',
-  titleLetterSpacing: '0.04em',
-  titleMarginBottom: '0.3em',
-  subtitleFontSize: '1em',
-  subtitleColor: '#555',
-  subtitleMarginBottom: '1.5em',
+  appTitle: "Habit Tracker",
+  titleFontSize: "1.6em",
+  titleFontWeight: "bold",
+  titleLetterSpacing: "0.04em",
+  titleMarginBottom: "0.3em",
+  subtitleFontSize: "1em",
+  subtitleColor: "#555",
+  subtitleMarginBottom: "1.5em",
   defaultDaysInMonth: 31,
-  cellSize: '18px',
+  cellSize: "18px",
   weeksInMonth: 5,
-  labelDaily: 'Daily',
-  labelWeekly: 'Weekly',
-  labelCustom: 'Custom',
-  sectionClass: 'tracker-section',
-  titleClass: 'tracker-title',
-  stackingClass: 'tracker-stacking',
-  labelClass: 'tracker-label',
-  gridClass: 'tracker-grid',
-  weekLabelClass: 'tracker-week-label',
-  cellClass: 'tracker-cell',
+  labelDaily: "Daily",
+  labelWeekly: "Weekly",
+  labelCustom: "",
+  sectionClass: "tracker-section",
+  titleClass: "tracker-title",
+  stackingClass: "tracker-stacking",
+  labelClass: "tracker-label",
+  gridClass: "tracker-grid",
+  weekLabelClass: "tracker-week-label",
+  cellClass: "tracker-cell"
 };
 function saveConfig(config2) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(config2));
@@ -31,58 +31,55 @@ function loadConfig() {
   if (!raw) return null;
   try {
     const parsed = JSON.parse(raw);
-    if (
-      typeof parsed.habitCount === 'number' &&
-      Array.isArray(parsed.habits) &&
-      typeof parsed.months === 'number'
-    ) {
+    if (typeof parsed.habitCount === "number" && Array.isArray(parsed.habits) && typeof parsed.months === "number") {
       return parsed;
     }
-  } catch {}
+  } catch {
+  }
   return null;
 }
 
 // src/dom.ts
-var appRoot = document.getElementById('app-root');
-var openDialogBtn = document.getElementById('open-dialog');
-var configDialog = document.getElementById('config-dialog');
-var configForm = document.getElementById('config-form');
-var closeDialogBtn = document.getElementById('close-dialog');
-var habitCountInput = document.getElementById('habit-count');
-var monthsInput = document.getElementById('months');
-var habitsConfigDiv = document.getElementById('habits-config');
+var appRoot = document.getElementById("app-root");
+var openDialogBtn = document.getElementById("open-dialog");
+var configDialog = document.getElementById("config-dialog");
+var configForm = document.getElementById("config-form");
+var closeDialogBtn = document.getElementById("close-dialog");
+var habitCountInput = document.getElementById("habit-count");
+var monthsInput = document.getElementById("months");
+var habitsConfigDiv = document.getElementById("habits-config");
 
 // src/habits-ui.ts
-var DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+var DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function updateHabitsConfigUI(config2) {
   const count = Number(habitCountInput.value);
-  habitsConfigDiv.innerHTML = '';
+  habitsConfigDiv.innerHTML = "";
   for (let i = 0; i < count; i++) {
     const habit = config2.habits[i] || {
-      name: '',
-      frequency: 'daily',
+      name: "",
+      frequency: "daily",
       customDays: [],
-      stacking: '',
+      stacking: ""
     };
-    const section = document.createElement('section');
+    const section = document.createElement("section");
     section.innerHTML = `
             <label for="habit-name-${i}">Habit ${i + 1} Name:</label>
             <input type="text" id="habit-name-${i}" name="habit-name-${i}" value="${habit.name}" maxlength="32" />
             <label for="habit-frequency-${i}">Frequency:</label>
             <select id="habit-frequency-${i}" name="habit-frequency-${i}">
-                <option value="daily"${habit.frequency === 'daily' ? ' selected' : ''}>Daily</option>
-                <option value="weekly"${habit.frequency === 'weekly' ? ' selected' : ''}>Weekly</option>
-                <option value="custom"${habit.frequency === 'custom' ? ' selected' : ''}>Custom Days</option>
+                <option value="daily"${habit.frequency === "daily" ? " selected" : ""}>Daily</option>
+                <option value="weekly"${habit.frequency === "weekly" ? " selected" : ""}>Weekly</option>
+                <option value="custom"${habit.frequency === "custom" ? " selected" : ""}>Custom Days</option>
             </select>
-            <div class="custom-days-row" id="custom-days-row-${i}" style="display:${habit.frequency === 'custom' ? 'block' : 'none'};margin-bottom:0.7em;">
+            <div class="custom-days-row" id="custom-days-row-${i}" style="display:${habit.frequency === "custom" ? "block" : "none"};margin-bottom:0.7em;">
                 <span>Days:</span>
                 ${DAYS_OF_WEEK.map(
-                  (d, idx) => `
+      (d, idx) => `
                     <label style="margin-right:0.6em;">
-                        <input type="checkbox" name="habit-custom-day-${i}" value="${idx}"${habit.customDays.includes(idx) ? ' checked' : ''} />${d}
+                        <input type="checkbox" name="habit-custom-day-${i}" value="${idx}"${habit.customDays.includes(idx) ? " checked" : ""} />${d}
                     </label>
-                `,
-                ).join('')}
+                `
+    ).join("")}
             </div>
             <label for="habit-stacking-${i}">Habit Stacking Statement:</label>
             <input type="text" id="habit-stacking-${i}" name="habit-stacking-${i}" value="${habit.stacking}" maxlength="64" placeholder="After I do X, I'll do this habit" />
@@ -92,22 +89,22 @@ function updateHabitsConfigUI(config2) {
   for (let i = 0; i < count; i++) {
     const freqSelect = document.getElementById(`habit-frequency-${i}`);
     const customDaysRow = document.getElementById(`custom-days-row-${i}`);
-    freqSelect.addEventListener('change', () => {
-      customDaysRow.style.display = freqSelect.value === 'custom' ? 'block' : 'none';
+    freqSelect.addEventListener("change", () => {
+      customDaysRow.style.display = freqSelect.value === "custom" ? "block" : "none";
     });
   }
 }
 function gatherConfigFromForm() {
   const habitCount = Number(habitCountInput.value);
-  const months = Number(document.getElementById('months').value);
+  const months = Number(document.getElementById("months").value);
   const habits = [];
   for (let i = 0; i < habitCount; i++) {
     const name = document.getElementById(`habit-name-${i}`).value.trim();
     const frequency = document.getElementById(`habit-frequency-${i}`).value;
     let customDays = [];
-    if (frequency === 'custom') {
+    if (frequency === "custom") {
       customDays = Array.from(
-        document.querySelectorAll(`input[name=habit-custom-day-${i}]:checked`),
+        document.querySelectorAll(`input[name=habit-custom-day-${i}]:checked`)
       ).map((el) => Number(el.value));
     }
     const stacking = document.getElementById(`habit-stacking-${i}`).value.trim();
@@ -118,56 +115,56 @@ function gatherConfigFromForm() {
 
 // src/tracker-render.ts
 function renderTrackerTemplate(trackerConfig) {
-  appRoot.innerHTML = '';
-  const titleElement = document.createElement('h1');
+  appRoot.innerHTML = "";
+  const titleElement = document.createElement("h1");
   titleElement.textContent = uiConfig.appTitle;
   titleElement.style.fontSize = uiConfig.titleFontSize;
   titleElement.style.fontWeight = uiConfig.titleFontWeight;
   titleElement.style.letterSpacing = uiConfig.titleLetterSpacing;
   titleElement.style.marginBottom = uiConfig.titleMarginBottom;
   appRoot.appendChild(titleElement);
-  const subtitleElement = document.createElement('div');
-  subtitleElement.textContent = `Tracking for ${trackerConfig.months} month${trackerConfig.months > 1 ? 's' : ''}`;
+  const subtitleElement = document.createElement("div");
+  subtitleElement.textContent = `Tracking for ${trackerConfig.months} month${trackerConfig.months > 1 ? "s" : ""}`;
   subtitleElement.style.fontSize = uiConfig.subtitleFontSize;
   subtitleElement.style.color = uiConfig.subtitleColor;
   subtitleElement.style.marginBottom = uiConfig.subtitleMarginBottom;
   appRoot.appendChild(subtitleElement);
   for (let habitIndex = 0; habitIndex < trackerConfig.habitCount; habitIndex++) {
     const habit = trackerConfig.habits[habitIndex];
-    const sectionElem = document.createElement('section');
+    const sectionElem = document.createElement("section");
     sectionElem.className = uiConfig.sectionClass;
-    const habitTitleElem = document.createElement('div');
+    const habitTitleElem = document.createElement("div");
     habitTitleElem.className = uiConfig.titleClass;
     habitTitleElem.textContent = habit.name || `Habit ${habitIndex + 1}`;
     sectionElem.appendChild(habitTitleElem);
     if (habit.stacking) {
-      const stackingElem = document.createElement('div');
+      const stackingElem = document.createElement("div");
       stackingElem.className = uiConfig.stackingClass;
       stackingElem.textContent = habit.stacking;
       sectionElem.appendChild(stackingElem);
     }
-    const freqLabelElem = document.createElement('div');
+    const freqLabelElem = document.createElement("div");
     freqLabelElem.className = uiConfig.labelClass;
-    if (habit.frequency === 'daily') {
+    if (habit.frequency === "daily") {
       freqLabelElem.textContent = uiConfig.labelDaily;
-    } else if (habit.frequency === 'weekly') {
+    } else if (habit.frequency === "weekly") {
       freqLabelElem.textContent = uiConfig.labelWeekly;
     } else {
-      freqLabelElem.textContent = `${uiConfig.labelCustom}: ${habit.customDays.map((d) => DAYS_OF_WEEK[d]).join(', ')}`;
+      freqLabelElem.textContent = `${uiConfig.labelCustom}: ${habit.customDays.map((d) => DAYS_OF_WEEK[d]).join(", ")}`;
     }
     sectionElem.appendChild(freqLabelElem);
-    const gridElem = document.createElement('div');
+    const gridElem = document.createElement("div");
     gridElem.className = uiConfig.gridClass;
-    if (habit.frequency === 'daily') {
+    if (habit.frequency === "daily") {
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement('div');
+        const monthLabelElem = document.createElement("div");
         monthLabelElem.className = uiConfig.weekLabelClass;
         monthLabelElem.textContent = `Month ${m + 1}`;
         sectionElem.appendChild(monthLabelElem);
         const daysInMonth = uiConfig.defaultDaysInMonth;
         gridElem.style.gridTemplateColumns = `repeat(${daysInMonth}, ${uiConfig.cellSize})`;
         for (let d = 0; d < daysInMonth; d++) {
-          const cellElem = document.createElement('span');
+          const cellElem = document.createElement("span");
           cellElem.className = uiConfig.cellClass;
           cellElem.title = `Day ${d + 1}`;
           const dayIdx = d % 7;
@@ -175,27 +172,27 @@ function renderTrackerTemplate(trackerConfig) {
           gridElem.appendChild(cellElem);
         }
         sectionElem.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = '';
+        gridElem.innerHTML = "";
       }
-    } else if (habit.frequency === 'weekly') {
+    } else if (habit.frequency === "weekly") {
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement('div');
+        const monthLabelElem = document.createElement("div");
         monthLabelElem.className = uiConfig.weekLabelClass;
         monthLabelElem.textContent = `Month ${m + 1}`;
         sectionElem.appendChild(monthLabelElem);
         gridElem.style.gridTemplateColumns = `repeat(${uiConfig.weeksInMonth}, ${uiConfig.cellSize})`;
         for (let w = 0; w < uiConfig.weeksInMonth; w++) {
-          const cellElem = document.createElement('span');
+          const cellElem = document.createElement("span");
           cellElem.className = uiConfig.cellClass;
           cellElem.title = `Week ${w + 1}`;
           gridElem.appendChild(cellElem);
         }
         sectionElem.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = '';
+        gridElem.innerHTML = "";
       }
-    } else if (habit.frequency === 'custom') {
+    } else if (habit.frequency === "custom") {
       for (let m = 0; m < trackerConfig.months; m++) {
-        const monthLabelElem = document.createElement('div');
+        const monthLabelElem = document.createElement("div");
         monthLabelElem.className = uiConfig.weekLabelClass;
         monthLabelElem.textContent = `Month ${m + 1}`;
         sectionElem.appendChild(monthLabelElem);
@@ -204,7 +201,7 @@ function renderTrackerTemplate(trackerConfig) {
         gridElem.style.gridTemplateColumns = `repeat(${weeks * days}, ${uiConfig.cellSize})`;
         for (let w = 0; w < weeks; w++) {
           for (const d of habit.customDays) {
-            const cellElem = document.createElement('span');
+            const cellElem = document.createElement("span");
             cellElem.className = uiConfig.cellClass;
             cellElem.title = `Week ${w + 1} - ${DAYS_OF_WEEK[d]}`;
             cellElem.textContent = DAYS_OF_WEEK[d][0];
@@ -212,7 +209,7 @@ function renderTrackerTemplate(trackerConfig) {
           }
         }
         sectionElem.appendChild(gridElem.cloneNode(true));
-        gridElem.innerHTML = '';
+        gridElem.innerHTML = "";
       }
     }
     appRoot.appendChild(sectionElem);
@@ -222,21 +219,21 @@ function renderTrackerTemplate(trackerConfig) {
 // src/main.ts
 var DEFAULT_CONFIG = {
   habitCount: 1,
-  habits: [{ name: '', frequency: 'daily', customDays: [], stacking: '' }],
-  months: 1,
+  habits: [{ name: "", frequency: "daily", customDays: [], stacking: "" }],
+  months: 1
 };
 var config = loadConfig() || DEFAULT_CONFIG;
-openDialogBtn.addEventListener('click', () => {
+openDialogBtn.addEventListener("click", () => {
   updateHabitsConfigUI(config);
   configDialog.showModal();
 });
-closeDialogBtn.addEventListener('click', () => {
+closeDialogBtn.addEventListener("click", () => {
   configDialog.close();
 });
-habitCountInput.addEventListener('input', () => {
+habitCountInput.addEventListener("input", () => {
   updateHabitsConfigUI(config);
 });
-configForm.addEventListener('submit', (e) => {
+configForm.addEventListener("submit", (e) => {
   e.preventDefault();
   config = gatherConfigFromForm();
   saveConfig(config);
