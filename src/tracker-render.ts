@@ -1,103 +1,108 @@
 // Rendering the printable tracker template
-import { TrackerConfig, FrequencyType } from './types.js';
+import { TrackerConfig } from './types.js';
 import { appRoot } from './dom.js';
 import { DAYS_OF_WEEK } from './habits-ui.js';
+import { uiConfig } from './config.js';
 
-export function renderTemplate(config: TrackerConfig) {
-    appRoot.innerHTML = '';
-    const title = document.createElement('h1');
-    title.textContent = 'Atomic Habits Tracker';
-    title.style.fontSize = '1.6em';
-    title.style.fontWeight = 'bold';
-    title.style.letterSpacing = '0.04em';
-    title.style.marginBottom = '0.3em';
-    appRoot.appendChild(title);
-    const subtitle = document.createElement('div');
-    subtitle.textContent = `Tracking for ${config.months} month${config.months > 1 ? 's' : ''}`;
-    subtitle.style.fontSize = '1em';
-    subtitle.style.color = '#555';
-    subtitle.style.marginBottom = '1.5em';
-    appRoot.appendChild(subtitle);
-    for (let i = 0; i < config.habitCount; i++) {
-        const habit = config.habits[i];
-        const section = document.createElement('section');
-        section.className = 'tracker-section';
-        const habitTitle = document.createElement('div');
-        habitTitle.className = 'tracker-title';
-        habitTitle.textContent = habit.name || `Habit ${i + 1}`;
-        section.appendChild(habitTitle);
-        if (habit.stacking) {
-            const stacking = document.createElement('div');
-            stacking.className = 'tracker-stacking';
-            stacking.textContent = habit.stacking;
-            section.appendChild(stacking);
-        }
-        const freqLabel = document.createElement('div');
-        freqLabel.className = 'tracker-label';
-        if (habit.frequency === 'daily') {
-            freqLabel.textContent = 'Daily';
-        } else if (habit.frequency === 'weekly') {
-            freqLabel.textContent = 'Weekly';
-        } else {
-            freqLabel.textContent = `Custom: ${habit.customDays.map((d) => DAYS_OF_WEEK[d]).join(', ')}`;
-        }
-        section.appendChild(freqLabel);
-        const grid = document.createElement('div');
-        grid.className = 'tracker-grid';
-        if (habit.frequency === 'daily') {
-            for (let m = 0; m < config.months; m++) {
-                const monthLabel = document.createElement('div');
-                monthLabel.className = 'tracker-week-label';
-                monthLabel.textContent = `Month ${m + 1}`;
-                section.appendChild(monthLabel);
-                const daysInMonth = 31;
-                grid.style.gridTemplateColumns = `repeat(31, 18px)`;
-                for (let d = 0; d < daysInMonth; d++) {
-                    const cell = document.createElement('span');
-                    cell.className = 'tracker-cell';
-                    cell.title = `Day ${d + 1}`;
-                    grid.appendChild(cell);
-                }
-                section.appendChild(grid.cloneNode(true));
-                grid.innerHTML = '';
-            }
-        } else if (habit.frequency === 'weekly') {
-            for (let m = 0; m < config.months; m++) {
-                const monthLabel = document.createElement('div');
-                monthLabel.className = 'tracker-week-label';
-                monthLabel.textContent = `Month ${m + 1}`;
-                section.appendChild(monthLabel);
-                grid.style.gridTemplateColumns = `repeat(5, 18px)`;
-                for (let w = 0; w < 5; w++) {
-                    const cell = document.createElement('span');
-                    cell.className = 'tracker-cell';
-                    cell.title = `Week ${w + 1}`;
-                    grid.appendChild(cell);
-                }
-                section.appendChild(grid.cloneNode(true));
-                grid.innerHTML = '';
-            }
-        } else if (habit.frequency === 'custom') {
-            for (let m = 0; m < config.months; m++) {
-                const monthLabel = document.createElement('div');
-                monthLabel.className = 'tracker-week-label';
-                monthLabel.textContent = `Month ${m + 1}`;
-                section.appendChild(monthLabel);
-                const weeks = 5;
-                const days = habit.customDays.length || 1;
-                grid.style.gridTemplateColumns = `repeat(${weeks * days}, 18px)`;
-                for (let w = 0; w < weeks; w++) {
-                    for (const d of habit.customDays) {
-                        const cell = document.createElement('span');
-                        cell.className = 'tracker-cell';
-                        cell.title = `Week ${w + 1} - ${DAYS_OF_WEEK[d]}`;
-                        grid.appendChild(cell);
-                    }
-                }
-                section.appendChild(grid.cloneNode(true));
-                grid.innerHTML = '';
-            }
-        }
-        appRoot.appendChild(section);
+export function renderTrackerTemplate(trackerConfig: TrackerConfig) {
+  appRoot.innerHTML = '';
+  const titleElement = document.createElement('h1');
+  titleElement.textContent = uiConfig.appTitle;
+  titleElement.style.fontSize = uiConfig.titleFontSize;
+  titleElement.style.fontWeight = uiConfig.titleFontWeight;
+  titleElement.style.letterSpacing = uiConfig.titleLetterSpacing;
+  titleElement.style.marginBottom = uiConfig.titleMarginBottom;
+  appRoot.appendChild(titleElement);
+
+  const subtitleElement = document.createElement('div');
+  subtitleElement.textContent = `Tracking for ${trackerConfig.months} month${trackerConfig.months > 1 ? 's' : ''}`;
+  subtitleElement.style.fontSize = uiConfig.subtitleFontSize;
+  subtitleElement.style.color = uiConfig.subtitleColor;
+  subtitleElement.style.marginBottom = uiConfig.subtitleMarginBottom;
+  appRoot.appendChild(subtitleElement);
+  for (let habitIndex = 0; habitIndex < trackerConfig.habitCount; habitIndex++) {
+    const habit = trackerConfig.habits[habitIndex];
+    const sectionElem = document.createElement('section');
+    sectionElem.className = uiConfig.sectionClass;
+    const habitTitleElem = document.createElement('div');
+    habitTitleElem.className = uiConfig.titleClass;
+    habitTitleElem.textContent = habit.name || `Habit ${habitIndex + 1}`;
+    sectionElem.appendChild(habitTitleElem);
+    if (habit.stacking) {
+      const stackingElem = document.createElement('div');
+      stackingElem.className = uiConfig.stackingClass;
+      stackingElem.textContent = habit.stacking;
+      sectionElem.appendChild(stackingElem);
     }
+    const freqLabelElem = document.createElement('div');
+    freqLabelElem.className = uiConfig.labelClass;
+    if (habit.frequency === 'daily') {
+      freqLabelElem.textContent = uiConfig.labelDaily;
+    } else if (habit.frequency === 'weekly') {
+      freqLabelElem.textContent = uiConfig.labelWeekly;
+    } else {
+      freqLabelElem.textContent = `${uiConfig.labelCustom}: ${habit.customDays.map((d: number) => DAYS_OF_WEEK[d]).join(', ')}`;
+    }
+    sectionElem.appendChild(freqLabelElem);
+    const gridElem = document.createElement('div');
+    gridElem.className = uiConfig.gridClass;
+    if (habit.frequency === 'daily') {
+      for (let m = 0; m < trackerConfig.months; m++) {
+        const monthLabelElem = document.createElement('div');
+        monthLabelElem.className = uiConfig.weekLabelClass;
+        monthLabelElem.textContent = `Month ${m + 1}`;
+        sectionElem.appendChild(monthLabelElem);
+        const daysInMonth = uiConfig.defaultDaysInMonth;
+        gridElem.style.gridTemplateColumns = `repeat(${daysInMonth}, ${uiConfig.cellSize})`;
+        for (let d = 0; d < daysInMonth; d++) {
+          const cellElem = document.createElement('span');
+          cellElem.className = uiConfig.cellClass;
+          cellElem.title = `Day ${d + 1}`;
+          const dayIdx = d % 7;
+          cellElem.textContent = DAYS_OF_WEEK[dayIdx][0];
+          gridElem.appendChild(cellElem);
+        }
+        sectionElem.appendChild(gridElem.cloneNode(true));
+        gridElem.innerHTML = '';
+      }
+    } else if (habit.frequency === 'weekly') {
+      for (let m = 0; m < trackerConfig.months; m++) {
+        const monthLabelElem = document.createElement('div');
+        monthLabelElem.className = uiConfig.weekLabelClass;
+        monthLabelElem.textContent = `Month ${m + 1}`;
+        sectionElem.appendChild(monthLabelElem);
+        gridElem.style.gridTemplateColumns = `repeat(${uiConfig.weeksInMonth}, ${uiConfig.cellSize})`;
+        for (let w = 0; w < uiConfig.weeksInMonth; w++) {
+          const cellElem = document.createElement('span');
+          cellElem.className = uiConfig.cellClass;
+          cellElem.title = `Week ${w + 1}`;
+          gridElem.appendChild(cellElem);
+        }
+        sectionElem.appendChild(gridElem.cloneNode(true));
+        gridElem.innerHTML = '';
+      }
+    } else if (habit.frequency === 'custom') {
+      for (let m = 0; m < trackerConfig.months; m++) {
+        const monthLabelElem = document.createElement('div');
+        monthLabelElem.className = uiConfig.weekLabelClass;
+        monthLabelElem.textContent = `Month ${m + 1}`;
+        sectionElem.appendChild(monthLabelElem);
+        const weeks = uiConfig.weeksInMonth;
+        const days = habit.customDays.length || 1;
+        gridElem.style.gridTemplateColumns = `repeat(${weeks * days}, ${uiConfig.cellSize})`;
+        for (let w = 0; w < weeks; w++) {
+          for (const d of habit.customDays) {
+            const cellElem = document.createElement('span');
+            cellElem.className = uiConfig.cellClass;
+            cellElem.title = `Week ${w + 1} - ${DAYS_OF_WEEK[d]}`;
+            cellElem.textContent = DAYS_OF_WEEK[d][0];
+            gridElem.appendChild(cellElem);
+          }
+        }
+        sectionElem.appendChild(gridElem.cloneNode(true));
+        gridElem.innerHTML = '';
+      }
+    }
+    appRoot.appendChild(sectionElem);
+  }
 }

@@ -3,14 +3,14 @@
 export type FrequencyType = 'daily' | 'weekly' | 'custom';
 
 export type HabitConfig = {
-    name: string;
-    frequency: FrequencyType;
-    customDays: number[]; // 0=Sun, 6=Sat
-    stacking: string;
+  name: string;
+  frequency: FrequencyType;
+  customDays: number[]; // 0=Sun, 6=Sat
+  stacking: string;
 };
 
 export type TrackerConfig = {
-    habitCount: number;
-    habits: HabitConfig[];
-    months: number;
+  habitCount: number;
+  habits: HabitConfig[];
+  months: number;
 };

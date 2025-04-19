@@ -1,196 +1,286 @@
 /* Modern CSS Reset */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed, 
-figure, figcaption, footer, header, hgroup, 
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-    box-sizing: border-box;
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  box-sizing: border-box;
 }
-html, body {
-    height: 100%;
-    font-family: 'Fira Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
-    background: #111;
-    color: #eee;
+html,
+body {
+  height: 100%;
+  font-family: 'Fira Mono', 'Menlo', 'Consolas', 'Liberation Mono', monospace;
+  background: #111;
+  color: #eee;
 }
 body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 2rem 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 2rem 0;
 }
 #app-root {
-    background: #fff;
-    color: #111;
-    width: 210mm;
-    height: 297mm;
-    box-shadow: 0 0 16px rgba(0,0,0,0.2);
-    margin: 0 auto;
-    padding: 24mm 18mm;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    font-family: inherit;
-    position: relative;
-    overflow: visible;
+  width: 210mm;
+  height: 297mm;
+  padding: 24mm 18mm;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  font-family: inherit;
+  position: relative;
+  overflow: visible;
 }
-button, input, select, textarea {
-    font-family: inherit;
-    font-size: 1rem;
-    background: #222;
-    color: #eee;
-    border: 1px solid #444;
-    border-radius: 3px;
-    padding: 0.4em 0.7em;
-    margin: 0.2em 0;
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  background: #222;
+  color: #eee;
+  border: 1px solid #444;
+  border-radius: 3px;
+  padding: 0.4em 0.7em;
+  margin: 0.2em 0;
 }
 button {
-    cursor: pointer;
-    transition: background 0.1s;
+  cursor: pointer;
+  transition: background 0.1s;
 }
-button:hover, button:focus {
-    background: #333;
+button:hover,
+button:focus {
+  background: #333;
 }
 #open-dialog {
-    position: fixed;
-    top: 1.5rem;
-    right: 2rem;
-    z-index: 1000;
-    background: #222;
-    color: #eee;
-    border: 1px solid #444;
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 1000;
+  background: #222;
+  color: #eee;
+  border: 1px solid #444;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 dialog#config-dialog {
-    min-width: 340px;
-    background: #181818;
-    color: #eee;
-    border-radius: 8px;
-    border: none;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
-    padding: 1.5rem 1.5rem 1rem 1.5rem;
-    z-index: 2000;
+  min-width: 340px;
+  background: #181818;
+  color: #eee;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  z-index: 2000;
 }
 dialog[open] {
-    display: block;
+  display: block;
 }
 #config-dialog header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 #config-dialog h2 {
-    font-size: 1.2em;
-    font-weight: bold;
-    letter-spacing: 0.05em;
+  font-size: 1.2em;
+  font-weight: bold;
+  letter-spacing: 0.05em;
 }
 #close-dialog {
-    background: none;
-    color: #eee;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
+  background: none;
+  color: #eee;
+  border: none;
+  font-size: 1.2em;
+  cursor: pointer;
 }
 #config-form fieldset {
-    border: none;
-    margin-bottom: 1em;
+  border: none;
+  margin-bottom: 1em;
 }
 #habits-config > section {
-    border-top: 1px solid #333;
-    margin-top: 1em;
-    padding-top: 1em;
-    margin-bottom: 1em;
+  border-top: 1px solid #333;
+  margin-top: 1em;
+  padding-top: 1em;
+  margin-bottom: 1em;
 }
 #config-form label {
-    display: block;
-    margin-bottom: 0.3em;
+  display: block;
+  margin-bottom: 0.3em;
 }
-#config-form input[type="text"] {
-    width: 100%;
+#config-form input[type='text'] {
+  width: 100%;
 }
 #config-form footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1em;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1em;
 }
 /* Main tracker styles */
 .tracker-section {
-    margin-bottom: 2.5rem;
+  margin-bottom: 2.5rem;
 }
 .tracker-title {
-    font-size: 1.25em;
-    font-weight: bold;
-    margin-bottom: 0.2em;
-    letter-spacing: 0.04em;
+  font-size: 1.25em;
+  font-weight: bold;
+  margin-bottom: 0.2em;
+  letter-spacing: 0.04em;
 }
 .tracker-stacking {
-    font-size: 0.97em;
-    color: #666;
-    margin-bottom: 0.7em;
-    font-style: italic;
+  font-size: 0.97em;
+  color: #666;
+  margin-bottom: 0.7em;
+  font-style: italic;
 }
 .tracker-grid {
-    display: grid;
-    gap: 2px;
-    margin-bottom: 0.5em;
+  display: grid;
+  gap: 2px;
+  margin-bottom: 0.5em;
 }
 .tracker-label {
-    font-size: 0.9em;
-    color: #444;
-    margin-bottom: 0.4em;
+  font-size: 0.9em;
+  color: #444;
+  margin-bottom: 0.4em;
 }
 .tracker-cell {
-    border: 1px solid #bbb;
-    min-width: 18px;
-    min-height: 18px;
-    width: 18px;
-    height: 18px;
-    background: none;
-    display: inline-block;
-    margin: 1px;
+  border: 1px solid #bbb;
+  min-width: 18px;
+  min-height: 18px;
+  width: 18px;
+  height: 18px;
+  background: none;
+  display: inline-block;
+  margin: 1px;
+
+  color: #ddd;
+  text-align: center;
+  font-size: 0.7em;
+  line-height: 17px;
 }
 .tracker-week-label {
-    font-size: 0.8em;
-    color: #888;
-    text-align: center;
-    margin-bottom: 0.2em;
+  font-size: 0.8em;
+  color: #888;
+  text-align: center;
+  margin-bottom: 0.2em;
+  text-align: left;
 }
 /* Print Styles */
 @media print {
-    html, body {
-        background: #fff !important;
-        color: #111 !important;
-    }
-    #open-dialog, #config-dialog, dialog, button, input, select, textarea {
-        display: none !important;
-    }
-    #app-root {
-        box-shadow: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 210mm !important;
-        height: 297mm !important;
-    }
+  @page {
+    margin: 0;
+  }
+  html,
+  body {
+    background: #fff !important;
+    color: #111 !important;
+  }
+  #open-dialog,
+  #config-dialog,
+  dialog,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+  }
+  #app-root {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 200mm !important;
+    height: 297mm !important;
+    padding-left: 10mm !important;
+  }
 }
