@@ -1,6 +1,6 @@
 # Atomic Habits Printable Tracker
 
-WIP - Fired thi together with Windsurf, needs more love. 
+WIP - Fired this together with Windsurf, needs more love. 
 
 <img width="1512" alt="Screenshot 2025-04-19 at 10 04 53" src="https://github.com/user-attachments/assets/a02d7661-c9ca-42c9-8042-dec3a2c7c4c3" />
 
